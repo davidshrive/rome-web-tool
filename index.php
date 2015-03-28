@@ -155,6 +155,16 @@
 	        $i++;
 
     	}
+    	echo 'BEFORE<p>';
+
+    	var_dump($regions);
+
+    	echo '<p>AFTER<p>';
+
+    	foreach ($regions as $region) {
+
+    		$region->generateSlots();
+    	}
 
     	var_dump($regions);
 	}
