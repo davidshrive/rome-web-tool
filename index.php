@@ -125,23 +125,17 @@
 		// Create faction classes
 		$query = "SELECT regionid, region from province WHERE provinceid = '".$provinceid."';";
 
-		$regions = mysqli_query($conn, $query);
-
-		var_dump($regions);
-
-		echo "<p>";
+		$regionsInfo = mysqli_query($conn, $query);
 
 		$i = 0;
-		//$regions = array();
+		$regions = array();
 
-	    while($region = $regions->fetch_array()) {
+	    while($region = $regionsInfo->fetch_array()) {
 
 		    $query = "SELECT * from region WHERE regionid = '".$region['regionid']."';";
 
 			$regionInfo = mysqli_query($conn, $query);
 			$regionInfo = $regionInfo->fetch_array();
-
-			//var_dump($regionInfo);
 
 	        $reg = new region();
 	        
@@ -151,19 +145,18 @@
 	        $reg->isPort = $regionInfo['isPort'];
 	        $reg->trade = $regionInfo['Trade'];
 
-	        // Fix theses.....
-	        //$reg->totalSlots = $reg->returnTotalSlots();
-	        //$reg->standardSlots = $reg->returnStandardSlots();
+	        // generate number of slots using class functions
+	        $reg->totalSlots = $reg->returnTotalSlots();
+	        $reg->standardSlots = $reg->returnStandardSlots();
 
 	        ${'region'.$i} = $reg;
 
-	        var_dump(${'region'.$i});
-	        //array_push($regions, ${'region'.$i});
+	        array_push($regions, ${'region'.$i});
 	        $i++;
-	        
+
     	}
 
-    	//var_dump($regions);
+    	var_dump($regions);
 	}
 ?>
 

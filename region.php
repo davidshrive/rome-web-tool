@@ -16,20 +16,44 @@ class region {
 
     //slot classes (figure out how to have class as part of class)
 
-    function returnTotalSlots (){
+    public function returnTotalSlots (){
 
-        if ($this->$isCapital && $this->$isPort) {return 6;}
-        if ($this->$isCapital && !$this->$isPort) {return 5;}
-        if (!$this->$isCapital && $$this->isPort) {return 4;}
-        if (!$this->$isCapital && !$this->$isPort) {return 3;}
+        if ($this->isCapital){
+        	if ($this->isPort){
+        		return 6;
+        	}
+        	else{
+        		return 5;
+        	}
+        }
+        else{
+        	if ($this->isPort){
+        		return 5;
+        	}
+        	else{
+        		return 4;
+        	}
+        }
     }
 
-    function returnStandardSlots (){
+    public function returnStandardSlots (){
 
-        if ($this->$isCapital && $$this->isPort) {return 4;}
-        if ($this->$isCapital && !$this->$isPort) {return 4;}
-        if (!$this->$isCapital && $this->$isPort) {return 3;}
-        if (!$this->$isCapital && !$this->$isPort) {return 3;}
+        if ($this->isCapital){
+        	if ($this->isPort){
+        		return 4;
+        	}
+        	else{
+        		return 4;
+        	}
+        }
+        else{
+        	if ($this->isPort){
+        		return 3;
+        	}
+        	else{
+        		return 3;
+        	}
+        }
     }
 } 
 
