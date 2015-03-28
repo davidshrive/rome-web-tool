@@ -9,16 +9,20 @@
 
 <?php
 
-	// Server info
+	// include php class files
+	include 'region.php';
+	include 'slot.php';
+
+	// server info
 	$servername = "localhost";
 	$username = "rome";
 	$password = "romesecretpassword";
 	$db = 'rome';
 
-	// Create connection
+	// create connection
 	$conn = new mysqli($servername, $username, $password, $db);
 
-	// Check connection
+	// check connection
 	if ($conn->connect_error) {
 	    die("Connection failed: " . $conn->connect_error);
 	} 
@@ -86,6 +90,8 @@
 <?php
 	if(isset($_POST['formSubmit'])) 
 	{
+		// grab global variables
+
 		$factionid = $_POST['formFaction'];
 		
 		if(strlen($factionid) == 0) 
@@ -116,11 +122,17 @@
 			echo("<p>You selected ".$province['province']."</p>");
 		}
 
-		// SHOW REGIONS
-
+		// Create faction classes
 		$query = "SELECT regionid, region from province WHERE provinceid = '".$provinceid."';";
 
 		$regions = mysqli_query($conn, $query);
+
+		var_dump($regions);
+
+		echo "<p>";
+
+		$i = 0;
+		//$regions = array();
 
 	    while($region = $regions->fetch_array()) {
 
@@ -129,124 +141,29 @@
 			$regionInfo = mysqli_query($conn, $query);
 			$regionInfo = $regionInfo->fetch_array();
 
-	        echo "<h2>Region</h2>";
+			//var_dump($regionInfo);
 
-	        //var_dump($regionInfo);
-
-	        echo "Name: ".$region['region'];
-
-	        echo "<br>Capital: ";
+	        $reg = new region();
 	        
-	        if ($regionInfo['isCapital'] == 1)
-	        {
-	        	echo 'Yes';
-	        }
-	        else
-	        {
-	        	echo 'No';
-	        }
+	        $reg->id = $region['regionid'];
+	        $reg->name = $region['region'];
+	        $reg->isCapital = $regionInfo['isCapital'];
+	        $reg->isPort = $regionInfo['isPort'];
+	        $reg->trade = $regionInfo['Trade'];
 
-	        echo "<br>Port: ";
+	        // Fix theses.....
+	        //$reg->totalSlots = $reg->returnTotalSlots();
+	        //$reg->standardSlots = $reg->returnStandardSlots();
 
-	        if ($regionInfo['isPort'] == 1)
-	        {
-	        	echo 'Yes';
-	        }
-	        else
-	        {
-	        	echo 'No';
-	        }
+	        ${'region'.$i} = $reg;
 
-	        echo "<br>Trade: ";
+	        var_dump(${'region'.$i});
+	        //array_push($regions, ${'region'.$i});
+	        $i++;
+	        
+    	}
 
-	        if ($regionInfo['Trade'])
-	        {
-	        	echo $regionInfo['Trade'];
-	        }
-	        else
-	        {
-	        	echo 'None';
-	        }
-
-	        echo "<br>Building Slots: ";
-
-	        if ($regionInfo['isCapital'] == 1 && $regionInfo['isPort'] == 1) {$buildingslots = 6; $standardslots = 4; echo $buildingslots;}
-	        if ($regionInfo['isCapital'] == 1 && $regionInfo['isPort'] == 0) {$buildingslots = 5; $standardslots = 4; echo $buildingslots;}
-	        if ($regionInfo['isCapital'] == 0 && $regionInfo['isPort'] == 1) {$buildingslots = 4; $standardslots = 2; echo $buildingslots;}
-	        if ($regionInfo['isCapital'] == 0 && $regionInfo['isPort'] == 0) {$buildingslots = 3; $standardslots = 3; echo $buildingslots;}
-
-	        // BUILDING SLOTS
-	        // Initial special slot
-
-	        echo "<br> Slot 1:";
-
-	        // Capital
-	        if ($regionInfo['isCapital'])
-	        {
-	        	$query = "SELECT image_name, buildingid, building from building where ".$factionid." = '1' AND isCapital = '1' AND level = '1';";
-
-	        	$buildings = mysqli_query($conn, $query);
-
-	        	while ($row = $buildings->fetch_array())
-				{
-					echo $row['building'];
-					echo '<img class="buildingicon" src="http://www.davidshrive.co.uk/tomthing/images/buildings/icons/'.$row['image_name'].'.png">';
-				}
-	        }
-
-	        // Town
-	        if (!$regionInfo['isCapital'])
-	        {
-	        	$query = "SELECT image_name, buildingid, building from building where ".$factionid." = '1' AND isTown = '1' AND level = '1' AND resource = '".$regionInfo['Trade']."' ;";
-
-	        	$buildings = mysqli_query($conn, $query);
-
-	        	while ($row = $buildings->fetch_array())
-				{
-					echo $row['building'];
-					echo '<img class="buildingicon" src="http://www.davidshrive.co.uk/tomthing/images/buildings/icons/'.$row['image_name'].'.png">';
-				}
-	        }
-
-	        //Standard Slots
-	        for ($i=2; $i < ($standardslots+2); $i++) { 
-
-	        	echo "<br> Slot ".($i).":";
-
-	        	// IF CAPITAL
-		  		if ($regionInfo['isCapital']) {
-		  		    $query = "SELECT image_name, buildingid, building from building where ".$factionid." = '1' AND capitalBuildable = '1' AND level = '1';";
-		  		}
-		  		// IF TOWN
-      		    if (!$regionInfo['isCapital']) {
-		  		    $query = "SELECT image_name, buildingid, building from building where ".$factionid." = '1' AND townBuildable = '1' AND level = '1';";
-		  		}
-				
-				$buildings = mysqli_query($conn, $query);
-
-				while ($row = $buildings->fetch_array())
-				{
-					echo $row['building'].': ';
-					echo '<img class="buildingicon" src="http://www.davidshrive.co.uk/tomthing/images/buildings/icons/'.$row['image_name'].'.png">';
-				}
-			}
-
-			//Port Slot
-			if ($regionInfo['isPort'])
-	        {
-	        	echo "<br> Slot ".$buildingslots.": ";
-
-	        	$query = "SELECT image_name, buildingid, building from building where ".$factionid." = '1' AND isPort = '1' AND level = '1';";
-
-	        	$buildings = mysqli_query($conn, $query);
-
-	        	while ($row = $buildings->fetch_array())
-				{
-					echo $row['building'];
-					echo '<img class="buildingicon" src="http://www.davidshrive.co.uk/tomthing/images/buildings/icons/'.$row['image_name'].'.png">';
-				}
-	        }
-    	}	
+    	//var_dump($regions);
 	}
 ?>
 
