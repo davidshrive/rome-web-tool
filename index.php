@@ -122,7 +122,7 @@
 			echo("<p>You selected ".$province['province']."</p>");
 		}
 
-		// Create faction classes
+		// Create region classes
 		$query = "SELECT regionid, region from province WHERE provinceid = '".$provinceid."';";
 
 		$regionsInfo = mysqli_query($conn, $query);
@@ -144,29 +144,35 @@
 	        $reg->isCapital = $regionInfo['isCapital'];
 	        $reg->isPort = $regionInfo['isPort'];
 	        $reg->trade = $regionInfo['Trade'];
+	        $reg->factionid = $factionid;
 
-	        // generate number of slots using class functions
-	        $reg->totalSlots = $reg->returnTotalSlots();
-	        $reg->standardSlots = $reg->returnStandardSlots();
+	        $reg->populate($conn);
 
 	        ${'region'.$i} = $reg;
 
 	        array_push($regions, ${'region'.$i});
 	        $i++;
-
     	}
-    	echo 'BEFORE<p>';
 
-    	var_dump($regions);
 
-    	echo '<p>AFTER<p>';
+    	//DISPLAY REGION INFO
+
+    	echo 'REGIONS <p>';
 
     	foreach ($regions as $region) {
 
-    		$region->generateSlots();
-    	}
+    		echo '<p>';
+    		
+    		echo 'Name: '.$region->name.'<br>';
+    		echo 'Capital: '.$region->isCapital.'<br>';
+    		echo 'Port: '.$region->isPort.'<br>';
+    		echo 'Trade: '.$region->trade.'<br>';
 
-    	var_dump($regions);
+	    	for ($i=0; $i < $region->totalSlots; $i++) { 
+	    		
+	    		echo 'Slots '.($i+1).':'.$region->{'slot'.$i}->buildingname.'<br>';
+	    	}
+    	}
 	}
 ?>
 
