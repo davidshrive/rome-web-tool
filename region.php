@@ -13,6 +13,7 @@ class region {
     public $totalSlots; 
     public $standardSlots; 
     public $trade;
+    public $effects = array();
 
     // faction info (needed for auto-populating slots)
     public $factionid;
@@ -43,6 +44,29 @@ class region {
 	        $building = $building->fetch_array();
 	        $this->updateSlot($conn, $building['buildingid'], ($this->totalSlots)-1);
 	    }
+    }
+
+    // function to calculate effects
+
+    function calculateEffects ($conn) {
+
+     	for ($i=0; $i < $this->totalSlots; $i++) { 
+    		
+     		$query = "SELECT * from effect where buildingid = '".$this->{'slot'.$i}->buildingid."';";
+     		$effectList = mysqli_query($conn, $query);
+
+     		if ($effectList->num_rows){
+
+     			while($effect = $effectList->fetch_array()){
+
+     				$ef['effect'] = $effect['effect'];
+     				$ef['scope'] = $effect['scope'];
+     				$ef['value'] = $effect['value'];
+
+     				array_push($this->effects, $ef);
+     			}
+     		}
+    	}
     }
 
     // function to update slot, takes SQL connection, buildingid and slot number as input

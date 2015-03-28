@@ -125,12 +125,12 @@
 		// Create region classes
 		$query = "SELECT regionid, region from province WHERE provinceid = '".$provinceid."';";
 
-		$regionsInfo = mysqli_query($conn, $query);
+		$regionsList = mysqli_query($conn, $query);
 
 		$i = 0;
 		$regions = array();
 
-	    while($region = $regionsInfo->fetch_array()) {
+	    while($region = $regionsList->fetch_array()) {
 
 		    $query = "SELECT * from region WHERE regionid = '".$region['regionid']."';";
 
@@ -171,6 +171,13 @@
 	    	for ($i=0; $i < $region->totalSlots; $i++) { 
 	    		
 	    		echo 'Slots '.($i+1).':'.$region->{'slot'.$i}->buildingname.'<br>';
+	    	}
+
+	    	$region->calculateEffects($conn);
+
+	    	echo 'Effects : <br>';
+	    	foreach ($region->effects as $effect) {
+	    		echo 'Name: '.$effect['effect'].', Scope: '.$effect['scope'].', Value: '.$effect['value'].'<br>';
 	    	}
     	}
 	}
