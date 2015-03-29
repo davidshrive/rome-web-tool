@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    $( "div.province" ).click(function() {
+    $( "div.provincetitle" ).click(function() {
   		$( 'div.region' ).slideToggle();
 	});
 });

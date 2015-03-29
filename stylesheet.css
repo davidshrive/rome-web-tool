@@ -2,19 +2,51 @@ body {
 	background-color: linen;
 }
 
+div.header {
+	width: 100%;
+	text-align: center;
+}
+
+div.title {
+	width: 100%;
+	text-align: center;
+}
+
+div.selectfaction {
+	width: 400px;
+	display: inline-block;
+	vertical-align: top;
+	text-align: center;
+}
+
+div.selectprovince {
+	width: 400px;
+	display: inline-block;
+	vertical-align: top;
+	text-align: center;
+}
+div.selectionbutton {
+	width: 300px;
+	display: inline-block;
+	vertical-align: top;
+	text-align: center;
+}
+
 div.province {
 	width: 100%;
-	border: 1px solid black;
 	text-align: center;
+}
+
+div.provincetitle {
+	width: 100%;
 }
 
 div.region {
 	height: 600px;
 	width: 275px;
 	display: inline-block;
-	border: 1px solid black;
-	text-align: left;
 	vertical-align: top;
+	text-align: left;
 }
 
 img.buildingicon {

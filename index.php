@@ -35,15 +35,16 @@
 <body>
 
 <!-- TITLE --> 
+<div class ='header'>
+<div class ='title'>
+<h1>Rome Web Tool</h1>
+</div>
 
-<h1>Tom Rome awesome epic thing</h1>
+<!-- GET FACTION INFO --> 
 
-<p>
-
-<!-- GET FACTION & PROVINCE INFO --> 
+<div class = 'selectfaction'>
 
 <form action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
-<br>
 <label for='formFaction'>Select your faction:</label>
 <select name="formFaction">
   <option value="">Select...</option>
@@ -63,8 +64,11 @@
 
   ?>
 </select>
-<br>
-<label for='formProvince'>Select your province:</label>
+
+</div>
+<div class = 'selectfaction'>
+
+<label for='formProvince'>Select your first province:</label>
 <select name="formProvince">
   <option value="">Select...</option>
   <?php
@@ -83,9 +87,13 @@
 
   ?>
 </select>
-<br>
+</div>
+
+<div class = 'selectionbutton'>
 <input type="submit" name="formSubmit" value="Select"> 
 </form>
+</div>
+</div>
 
 <!-- Generate region info and bundle it all up into an province object --> 
 
@@ -101,13 +109,9 @@
 		$factionInfo = mysqli_query($conn, $query);
 		$factionInfo = $factionInfo->fetch_array();
 
-		echo("<p>You selected ".$factionInfo['faction']."</p>");
-
 		$query = "SELECT province from province where provinceid = '".$provinceid."';";
 		$provinceInfo = mysqli_query($conn, $query);
 		$provinceInfo = $provinceInfo->fetch_array();
-
-		echo("<p>You selected ".$provinceInfo['province']."</p>");
 
 		// Create province class
 		$province = new province();
@@ -150,17 +154,15 @@
 		// add regions array to province class
 		$province->regions = $regions;
 	}
-	else{
-		echo "You didn't select anything....";
-	}
-
 ?>
 
 <!--DISPLAY REGION INFO-->
 
 <div class = "province">
 
+<div class = "provincetitle">
 <h2><?php echo $province->name; ?></h2>
+</div>
 
 <?php
 
