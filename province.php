@@ -87,7 +87,7 @@ function displayProvinceInfo($province)
 			echo '<img class="buildingicon" src="'.$region->{'slot'.$i}->buildingimagelink.'">';
 		}
 
-		echo '<h2>Effects : </h2>';
+		echo '<h3>Effects : </h3>';
 		foreach ($region->effects as $effect) {
 			echo 'Name: '.$effect['effect'].', Scope: '.$effect['scope'].', Value: '.$effect['value'].'<br>';
 		}
