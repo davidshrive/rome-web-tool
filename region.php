@@ -36,6 +36,13 @@ class region {
 	        $building = $building->fetch_array();
 	        $this->updateSlot($conn, $building['buildingid'], 0);
 	    }
+	    else{
+
+	        $query = "SELECT buildingid from building where ".$this->factionid." = '1' AND isTown = '1' AND level = '1' AND resource = '".$this->trade."' ;";
+	        $building = mysqli_query($conn, $query);
+	        $building = $building->fetch_array();
+	        $this->updateSlot($conn, $building['buildingid'], 0);
+	    }
 
 	    if ($this->isPort){
 
@@ -82,6 +89,9 @@ class region {
 		$this->{'slot'.$slot}->buildingname = $buildingInfo['building'];
 		$this->{'slot'.$slot}->buildingimagelink = 'http://www.davidshrive.co.uk/tomthing/images/buildings/icons/'.$buildingInfo['image_name'].'.png';
 		$this->{'slot'.$slot}->level = $buildingInfo['level'];
+
+		// update effects
+		$this->calculateEffects($conn);
     }
 
     // function to return total number of slots

@@ -157,11 +157,11 @@
 
     	//DISPLAY REGION INFO
 
-    	echo 'REGIONS <p>';
+    	echo '<h2>Regions</h2>';
 
     	foreach ($regions as $region) {
 
-    		echo '<p>';
+    		echo '<div>';
     		
     		echo 'Name: '.$region->name.'<br>';
     		echo 'Capital: '.$region->isCapital.'<br>';
@@ -173,12 +173,12 @@
 	    		echo 'Slots '.($i+1).':'.$region->{'slot'.$i}->buildingname.'<br>';
 	    	}
 
-	    	$region->calculateEffects($conn);
-
 	    	echo 'Effects : <br>';
 	    	foreach ($region->effects as $effect) {
 	    		echo 'Name: '.$effect['effect'].', Scope: '.$effect['scope'].', Value: '.$effect['value'].'<br>';
 	    	}
+
+	    	echo '</div>';
     	}
 	}
 ?>
