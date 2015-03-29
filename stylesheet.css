@@ -2,12 +2,19 @@ body {
 	background-color: linen;
 }
 
-div {
-	vertical-align: top;
-	height: 600px;
-	width: 280px;
+div.province {
+	width: 100%;
 	border: 1px solid black;
-	display: inline-block;	
+	text-align: center;
+}
+
+div.region {
+	height: 600px;
+	width: 275px;
+	display: inline-block;
+	border: 1px solid black;
+	text-align: left;
+	vertical-align: top;
 }
 
 img.buildingicon {

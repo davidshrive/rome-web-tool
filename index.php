@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	
+
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 <script type='text/javascript' src='script.js'></script>
 <link rel='stylesheet' type='text/css' href='stylesheet.css'/>
@@ -13,6 +13,7 @@
 	// include php class files
 	include 'region.php';
 	include 'slot.php';
+	include 'province.php';
 
 	// server info
 	$servername = "localhost";
@@ -86,51 +87,42 @@
 <input type="submit" name="formSubmit" value="Select"> 
 </form>
 
-<!-- SHOW FACTION AND PROVINCE INFO --> 
+<!-- Generate region info and bundle it all up into an province object --> 
 
 <?php
-	if(isset($_POST['formSubmit'])) 
+	// grab global variables
+	$factionid = $_POST['formFaction'];
+	$provinceid = $_POST['formProvince'];
+	
+	if(strlen($factionid) > 0 && strlen($provinceid) > 0 ) 
 	{
-		// grab global variables
 
-		$factionid = $_POST['formFaction'];
-		
-		if(strlen($factionid) == 0) 
-		{
-			echo("<p>You didn't select a faction!</p>\n");
-		} 
-		else 
-		{
-			$query = "SELECT faction from faction where factionid = '".$factionid."';";
-			$faction = mysqli_query($conn, $query);
-			$faction = $faction->fetch_array();
+		$query = "SELECT faction from faction where factionid = '".$factionid."';";
+		$factionInfo = mysqli_query($conn, $query);
+		$factionInfo = $factionInfo->fetch_array();
 
-			echo("<p>You selected ".$faction['faction']."</p>");
-		}
+		echo("<p>You selected ".$factionInfo['faction']."</p>");
 
-		$provinceid = $_POST['formProvince'];
-		
-		if(strlen($provinceid) == 0) 
-		{
-			echo("<p>You didn't select a province!</p>\n");
-		} 
-		else 
-		{
-			$query = "SELECT province from province where provinceid = '".$provinceid."';";
-			$province = mysqli_query($conn, $query);
-			$province = $province->fetch_array();
+		$query = "SELECT province from province where provinceid = '".$provinceid."';";
+		$provinceInfo = mysqli_query($conn, $query);
+		$provinceInfo = $provinceInfo->fetch_array();
 
-			echo("<p>You selected ".$province['province']."</p>");
-		}
+		echo("<p>You selected ".$provinceInfo['province']."</p>");
 
-		// Create region classes
+		// Create province class
+		$province = new province();
+
+		$province->id = $provinceid;
+		$province->name = $provinceInfo['province'];
+
+		// Query DB for region info
 		$query = "SELECT regionid, region from province WHERE provinceid = '".$provinceid."';";
-
 		$regionsList = mysqli_query($conn, $query);
 
-		$i = 0;
 		$regions = array();
 
+		// Create region classes
+		$i = 0;
 	    while($region = $regionsList->fetch_array()) {
 
 		    $query = "SELECT * from region WHERE regionid = '".$region['regionid']."';";
@@ -151,45 +143,59 @@
 
 	        ${'region'.$i} = $reg;
 
-	        array_push($regions, ${'region'.$i});
+	        // Add to region list
+	        array_push($regions, $reg);
 	        $i++;
-    	}
-
-
-    	//DISPLAY REGION INFO
-
-    	echo '<h2>Regions</h2>';
-
-    	foreach ($regions as $region) {
-
-    		echo '<div>';
-    		
-    		echo '<h3>'.$region->name.'</h3>';
-    		echo 'Capital: '.$region->isCapital.'<br>';
-    		echo 'Port: '.$region->isPort.'<br>';
-    		echo 'Trade: '.$region->trade.'<br>';
-
-	    	for ($i=0; $i < $region->totalSlots; $i++) { 
-	    		
-	    		echo 'Slots '.($i+1).':'.$region->{'slot'.$i}->buildingname.'<br>';
-	    	}
-
-	    	// Icons
-
-	    	for ($i=0; $i < $region->totalSlots; $i++) { 
-	    		
-	    		echo '<img class = "buildingicon" id="buildingicon" src="'.$region->{'slot'.$i}->buildingimagelink.'">';
-	    	}
-
-	    	echo '<h2>Effects : </h2>';
-	    	foreach ($region->effects as $effect) {
-	    		echo 'Name: '.$effect['effect'].', Scope: '.$effect['scope'].', Value: '.$effect['value'].'<br>';
-	    	}
-
-	    	echo '</div>';
-    	}
+		}
+		// add regions array to province class
+		$province->regions = $regions;
 	}
+	else{
+		echo "You didn't select anything....";
+	}
+
 ?>
+
+<!--DISPLAY REGION INFO-->
+
+<div class = "province">
+
+<h2><?php echo $province->name; ?></h2>
+
+<?php
+
+foreach ($province->regions as $region) {
+
+	echo '<div class = "region">';
+	
+	echo '<h3>'.$region->name.'</h3>';
+	echo 'Capital: '.$region->isCapital.'<br>';
+	echo 'Port: '.$region->isPort.'<br>';
+	echo 'Trade: '.$region->trade.'<br>';
+
+	for ($i=0; $i < $region->totalSlots; $i++) { 
+		
+		echo 'Slots '.($i+1).':'.$region->{'slot'.$i}->buildingname.'<br>';
+	}
+
+	// Icons
+
+	for ($i=0; $i < $region->totalSlots; $i++) { 
+		
+		echo '<img class="buildingicon" src="'.$region->{'slot'.$i}->buildingimagelink.'">';
+	}
+
+	echo '<h2>Effects : </h2>';
+	foreach ($region->effects as $effect) {
+		echo 'Name: '.$effect['effect'].', Scope: '.$effect['scope'].', Value: '.$effect['value'].'<br>';
+	}
+
+	echo '</div>';
+}
+
+?>
+
+</div>
 
 </body>
 </html>

@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    $( "img.buildingicon" ).click(function() {
-  		$( this ).slideUp();
+    $( "div.province" ).click(function() {
+  		$( 'div.region' ).slideToggle();
 	});
 });
