@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<link rel='stylesheet' type='text/css' href='http://www.davidshrive.co.uk/tomthing/stylesheet.css'/>
-<script type='text/javascript' src='http://www.davidshrive.co.uk/tomthing/script.js'></script>
+	
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script type='text/javascript' src='script.js'></script>
+<link rel='stylesheet' type='text/css' href='stylesheet.css'/>
 
 <!-- SERVER INFO --> 
 
@@ -177,7 +178,7 @@
 
 	    	for ($i=0; $i < $region->totalSlots; $i++) { 
 	    		
-	    		echo '<img class="buildingicon" src="'.$region->{'slot'.$i}->buildingimagelink.'">';
+	    		echo '<img class = "buildingicon" id="buildingicon" src="'.$region->{'slot'.$i}->buildingimagelink.'">';
 	    	}
 
 	    	echo '<h2>Effects : </h2>';

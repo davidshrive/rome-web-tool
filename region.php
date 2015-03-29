@@ -71,9 +71,29 @@ class region {
 	    }
     }
 
-    // function to calculate effects
+    // function to update slot, takes SQL connection, buildingid and slot number as input
+    function updateSlot ($conn, $buildingid, $slot){
 
+    	//sql look up
+		$query = "SELECT * from building WHERE buildingid = '".$buildingid."';";
+		$buildingInfo = mysqli_query($conn, $query);
+		$buildingInfo = $buildingInfo->fetch_array();
+
+		// add building info to slot object
+		$this->{'slot'.$slot}->buildingid = $buildingInfo['buildingid'];
+		$this->{'slot'.$slot}->buildingname = $buildingInfo['building'];
+		$this->{'slot'.$slot}->buildingimagelink = 'http://www.davidshrive.co.uk/tomthing/images/buildings/icons/'.$buildingInfo['image_name'].'.png';
+		$this->{'slot'.$slot}->level = $buildingInfo['level'];
+
+		// update effects
+		$this->calculateEffects($conn);
+    }
+
+    // function to calculate effects
     function calculateEffects ($conn) {
+
+    	//delete all existing effects
+    	$this->effects = array();
 
      	for ($i=0; $i < $this->totalSlots; $i++) { 
     		
@@ -92,24 +112,6 @@ class region {
      			}
      		}
     	}
-    }
-
-    // function to update slot, takes SQL connection, buildingid and slot number as input
-    function updateSlot ($conn, $buildingid, $slot){
-
-    	//sql look up
-		$query = "SELECT * from building WHERE buildingid = '".$buildingid."';";
-		$buildingInfo = mysqli_query($conn, $query);
-		$buildingInfo = $buildingInfo->fetch_array();
-
-		// add building info to slot object
-		$this->{'slot'.$slot}->buildingid = $buildingInfo['buildingid'];
-		$this->{'slot'.$slot}->buildingname = $buildingInfo['building'];
-		$this->{'slot'.$slot}->buildingimagelink = 'http://www.davidshrive.co.uk/tomthing/images/buildings/icons/'.$buildingInfo['image_name'].'.png';
-		$this->{'slot'.$slot}->level = $buildingInfo['level'];
-
-		// update effects
-		$this->calculateEffects($conn);
     }
 
     // function to return total number of slots
