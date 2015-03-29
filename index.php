@@ -163,7 +163,7 @@
 
     		echo '<div>';
     		
-    		echo 'Name: '.$region->name.'<br>';
+    		echo '<h3>'.$region->name.'</h3>';
     		echo 'Capital: '.$region->isCapital.'<br>';
     		echo 'Port: '.$region->isPort.'<br>';
     		echo 'Trade: '.$region->trade.'<br>';
@@ -173,7 +173,14 @@
 	    		echo 'Slots '.($i+1).':'.$region->{'slot'.$i}->buildingname.'<br>';
 	    	}
 
-	    	echo 'Effects : <br>';
+	    	// Icons
+
+	    	for ($i=0; $i < $region->totalSlots; $i++) { 
+	    		
+	    		echo '<img class="buildingicon" src="'.$region->{'slot'.$i}->buildingimagelink.'">';
+	    	}
+
+	    	echo '<h2>Effects : </h2>';
 	    	foreach ($region->effects as $effect) {
 	    		echo 'Name: '.$effect['effect'].', Scope: '.$effect['scope'].', Value: '.$effect['value'].'<br>';
 	    	}

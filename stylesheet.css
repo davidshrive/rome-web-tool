@@ -5,7 +5,12 @@ body {
 div {
 	vertical-align: top;
 	height: 600px;
-	width: 300px;
+	width: 280px;
 	border: 1px solid black;
 	display: inline-block;	
+}
+
+img.buildingicon {
+	height: 50px;
+    width: 50px;
 }

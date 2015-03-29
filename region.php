@@ -31,17 +31,31 @@ class region {
 
         if ($this->isCapital){
 
+        	// default 1st building
 	        $query = "SELECT buildingid from building where ".$this->factionid." = '1' AND isCapital = '1' AND level = '1';";
 	        $building = mysqli_query($conn, $query);
 	        $building = $building->fetch_array();
 	        $this->updateSlot($conn, $building['buildingid'], 0);
-	    }
+
+	        // remaing slots (-1 for port)
+	        for ($i=1; $i < ($this->totalSlots)-1; $i++) { 
+    		
+    			$this->updateSlot($conn, 'empty', $i);
+    		}
+    	}
 	    else{
 
+			// default 1st building
 	        $query = "SELECT buildingid from building where ".$this->factionid." = '1' AND isTown = '1' AND level = '1' AND resource = '".$this->trade."' ;";
 	        $building = mysqli_query($conn, $query);
 	        $building = $building->fetch_array();
 	        $this->updateSlot($conn, $building['buildingid'], 0);
+
+	        // remaing slots (-1 for port)
+	        for ($i=1; $i < ($this->totalSlots)-1; $i++) { 
+    		
+    			$this->updateSlot($conn, 'empty', $i);
+    		}
 	    }
 
 	    if ($this->isPort){
@@ -50,6 +64,10 @@ class region {
 	        $building = mysqli_query($conn, $query);
 	        $building = $building->fetch_array();
 	        $this->updateSlot($conn, $building['buildingid'], ($this->totalSlots)-1);
+	    }
+	    else
+	    {
+	    	$this->updateSlot($conn, 'empty', ($this->totalSlots)-1);
 	    }
     }
 
