@@ -1,3 +1,7 @@
+<?php
+	session_start();
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,9 +10,9 @@
 <script type='text/javascript' src='script.js'></script>
 <link rel='stylesheet' type='text/css' href='stylesheet.css'/>
 
-<!-- SERVER INFO --> 
-
 <?php
+
+	//<-- SERVER INFO --> 
 
 	// include php class files
 	include 'region.php';
@@ -28,6 +32,12 @@
 	if ($conn->connect_error) {
 	    die("Connection failed: " . $conn->connect_error);
 	} 
+
+	//<-- SESSION VARIABLES --> 
+
+	$provinces = array();
+
+	$_SESSION["provinces"] = $provinces;
 
 ?>
 
@@ -77,10 +87,10 @@
 	$query = 'SELECT DISTINCT provinceid, province from province ORDER by province;';
 
 	// Query db
-	$provinces = mysqli_query($conn, $query);
+	$provincelist = mysqli_query($conn, $query);
 
 	// Populate form
-    while($row = $provinces->fetch_array()) {
+    while($row = $provincelist->fetch_array()) {
 
         echo "<option value=".$row['provinceid'].">".$row['province']."</option>"; 
     }
@@ -95,16 +105,19 @@
 </div>
 </div>
 
-<!-- Generate region info and bundle it all up into an province object --> 
+<!-- Generate region info and bundle it all up into an province object, then add to global variable --> 
 
 <?php
 	// grab global variables
-	$factionid = $_POST['formFaction'];
 	$provinceid = $_POST['formProvince'];
+	$factionid = $_POST['formFaction'];
 	
 	if(strlen($factionid) > 0 && strlen($provinceid) > 0 ) 
 	{
-		$province = addProvince($conn, $provinceid, $factionid);	
+		$province = createProvince($conn, $provinceid, $factionid);
+		
+		$provinces[] = $province;
+		$_SESSION["provinces"] = $provinces;
 	}
 ?>
 
@@ -120,10 +133,10 @@
 	$query = 'SELECT DISTINCT provinceid, province from province ORDER by province;';
 
 	// Query db
-	$provinces = mysqli_query($conn, $query);
+	$provincelist = mysqli_query($conn, $query);
 
 	// Populate form
-    while($row = $provinces->fetch_array()) {
+    while($row = $provincelist->fetch_array()) {
 
         echo "<option value=".$row['provinceid'].">".$row['province']."</option>"; 
     }
@@ -135,7 +148,11 @@
 
 <?php
 
-displayProvinceInfo($province);
+foreach ($provinces as $province) {
+	
+	displayProvinceInfo($province);
+
+}
 
 ?>
 

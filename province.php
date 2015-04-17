@@ -7,7 +7,7 @@ class province {
 	// then an array consisting of all regions can be added
 }
 
-function addProvince($conn, $provinceid, $factionid)
+function createProvince($conn, $provinceid, $factionid)
 {
 
 		$query = "SELECT province from province where provinceid = '".$provinceid."';";
@@ -52,6 +52,7 @@ function addProvince($conn, $provinceid, $factionid)
 	        array_push($regions, $reg);
 	        $i++;
 		}
+
 		// add regions array to province class
 		$province->regions = $regions;
 
