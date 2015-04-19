@@ -121,31 +121,6 @@
 	}
 ?>
 
-<!--ADD ANOTHER PROVINCE-->
-
-<form action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
-<label for='addProvince'>Add another province:</label>
-<select name="addProvince">
-  <option value="">Select...</option>
-  <?php
-
-  	// Craft query
-	$query = 'SELECT DISTINCT provinceid, province from province ORDER by province;';
-
-	// Query db
-	$provincelist = mysqli_query($conn, $query);
-
-	// Populate form
-    while($row = $provincelist->fetch_array()) {
-
-        echo "<option value=".$row['provinceid'].">".$row['province']."</option>"; 
-    }
-
-  ?>
-</select>
-<input type="submit" name="formSubmit" value="Add"> 
-</form>
-
 <?php
 
 foreach ($provinces as $province) {

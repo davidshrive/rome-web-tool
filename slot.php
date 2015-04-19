@@ -7,5 +7,4 @@ class slot {
 	public $level; //needed?
 
 }
-
 ?>
