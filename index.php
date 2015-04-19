@@ -1,7 +1,3 @@
-<?php
-	session_start();
-?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,9 +31,11 @@
 
 	//<-- SESSION VARIABLES --> 
 
-	$provinces = array();
+	session_start();
 
-	$_SESSION["provinces"] = $provinces;
+	$provinces = array();
+	$provinces = $_SESSION["provinces"];
+	$faction = $_SESSION["faction"];
 
 ?>
 
@@ -52,74 +50,93 @@
 
 <!-- GET FACTION INFO --> 
 
-<div class = 'selectfaction'>
+<div class = 'faction'>
 
-<form action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
-<label for='formFaction'>Select your faction:</label>
-<select name="formFaction">
-  <option value="">Select...</option>
-  <?php
+	<div class = 'selectfaction'>
+		<form action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
+		<label for='formFaction'>Select your faction:</label>
+		<select name="formFaction">
+		  <option value="">Select...</option>
+		  <?php
+			// Craft query
+			$query = 'SELECT * from faction ORDER by faction;';
 
-	// Craft query
-	$query = 'SELECT * from faction ORDER by faction;';
+			// Query db
+			$factions = mysqli_query($conn, $query);
 
-	// Query db
-	$factions = mysqli_query($conn, $query);
+			// Populate form
+		    while($row = $factions->fetch_array()) {
 
-	// Populate form
-    while($row = $factions->fetch_array()) {
+		        echo "<option value=".$row['factionid'].">".$row['faction']."</option>"; 
+		    }
+		  ?>
+		</select>
+	</div>
 
-        echo "<option value=".$row['factionid'].">".$row['faction']."</option>"; 
-    }
-
-  ?>
-</select>
+	<div class = 'selectionbutton'>
+		<input type="submit" name="factionSubmit" value="Select"> 
+		</form>
+	</div>
 
 </div>
-<div class = 'selectfaction'>
 
-<label for='formProvince'>Select your first province:</label>
-<select name="formProvince">
-  <option value="">Select...</option>
-  <?php
+<div class = 'addprovince'>
 
-  	// Craft query
-	$query = 'SELECT DISTINCT provinceid, province from province ORDER by province;';
+	<div class = 'selectprovince'>
+		<form action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
+		<label for='formProvince'>Add a province:</label>
+		<select name="formProvince">
+		  <option value="">Select...</option>
+		  <?php
+		  	// Craft query
+			$query = 'SELECT DISTINCT provinceid, province from province ORDER by province;';
 
-	// Query db
-	$provincelist = mysqli_query($conn, $query);
+			// Query db
+			$provincelist = mysqli_query($conn, $query);
 
-	// Populate form
-    while($row = $provincelist->fetch_array()) {
+			// Populate form
+		    while($row = $provincelist->fetch_array()) {
 
-        echo "<option value=".$row['provinceid'].">".$row['province']."</option>"; 
-    }
+		        echo "<option value=".$row['provinceid'].">".$row['province']."</option>"; 
+		    }
+		  ?>
+		</select>
+	</div>
 
-  ?>
-</select>
+	<div class = 'selectionbutton'>
+		<input type="submit" name="provinceSubmit" value="Add"> 
+		</form>
+	</div>
 </div>
 
-<div class = 'selectionbutton'>
-<input type="submit" name="formSubmit" value="Select"> 
-</form>
-</div>
 </div>
 
 <!-- Generate region info and bundle it all up into an province object, then add to global variable --> 
 
 <?php
-	// grab global variables
+	// grab post variables
 	$provinceid = $_POST['formProvince'];
 	$factionid = $_POST['formFaction'];
-	
-	if(strlen($factionid) > 0 && strlen($provinceid) > 0 ) 
+
+	// if faction set
+	if(strlen($factionid) > 0) 
 	{
+		$_SESSION["faction"] = $factionid;
+	}
+
+	// if province set	
+	if(strlen($provinceid) > 0) 
+	{
+		$factionid = $_SESSION["faction"];
 		$province = createProvince($conn, $provinceid, $factionid);
 		
 		$provinces[] = $province;
 		$_SESSION["provinces"] = $provinces;
 	}
 ?>
+
+
+<!--SHOW PROVINCE INFO-->
 
 <?php
 

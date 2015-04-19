@@ -12,23 +12,30 @@ div.title {
 	text-align: center;
 }
 
+div.faction {
+	width: 100%;
+	text-align: center;
+}
+
 div.selectfaction {
 	width: 400px;
 	display: inline-block;
-	vertical-align: top;
+	text-align: center;
+}
+
+div.addprovince {
+	width: 100%;
 	text-align: center;
 }
 
 div.selectprovince {
 	width: 400px;
 	display: inline-block;
-	vertical-align: top;
 	text-align: center;
 }
 div.selectionbutton {
 	width: 300px;
 	display: inline-block;
-	vertical-align: top;
 	text-align: center;
 }
 
