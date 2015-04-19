@@ -45,7 +45,7 @@
 <!-- TITLE --> 
 <div class ='header'>
 <div class ='title'>
-<h1>Rome Web Tool</h1>
+<h1>Total War: Rome 2 Building Planner</h1>
 </div>
 
 <!-- GET FACTION INFO --> 
